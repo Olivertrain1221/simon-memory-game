@@ -2,8 +2,10 @@
  * @jest-environment jsdom
  */    
 
-const { game, newGame, showScore, addTurn } = require("../game");
- 
+const { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn } = require("../game");
+
+jest.spyOn(window, "aler").mockImplementation(() => { });
+
  beforeAll(() => {
      let fs = require("fs");
      let fileContents = fs.readFileSync("index.html", "utf-8");
@@ -50,6 +52,17 @@ const { game, newGame, showScore, addTurn } = require("../game");
      test("should be one move in the computer's game array", () => {
          expect(game.currentGame.length).toBe(1);
      });
+     test("expect data-listener to be true", () => {
+         const elements = document.getElementsByClassName("circle");
+         for (let element of elements) {
+             expect(element.getAttribute("data-listener")).toEqual("true");
+         }
+     });
+     test("should increment the score if the turn is correct", () => {
+         game.playerMoves.push(game.currentGame[0]);
+         playerTurn();
+         expect(game.score).toBe(1);
+     })
  });
 
  describe("gameplay works correctly", () => {
@@ -67,6 +80,21 @@ const { game, newGame, showScore, addTurn } = require("../game");
      test("addTurn adds a new turn to the game", () => {
          addTurn();
          expect(game.currentGame.length).toBe(2);
+     });
+     test("should add correct class to light up the buttons", () => {
+         let button = document.getElementById(game.currentGame[0]);
+         lightsOn(game.currentGame[0]);
+         expect(button.classList).toContain("light");
+     });
+     test("showTurns should update game.turnNumber", () =>{
+         game.turnNumber =42;
+         showTurns();
+         expect(game.turnNumber).toBe(0);
+     });
+     test("Should call an alert if the move is wrong", () => {
+         game.playerMoves.push("wrong");
+         playerTurn();
+         expect(window.alert).toBeCalledWith("Wrong move!");
      });
  });
 
