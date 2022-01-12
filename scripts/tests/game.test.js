@@ -8,3 +8,9 @@
      document.open();
      document.write(fileContents);
  })
+
+ describe("game object contains correct keys", () => {
+     test("score key exists", () => {
+         except("score" in game).toBe(true);
+     })
+ })
