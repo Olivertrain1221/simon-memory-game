@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */    
 
-const { game, newGame, showScore } = require("../game");
+const { game, newGame, showScore, addTurn } = require("../game");
  
  beforeAll(() => {
      let fs = require("fs");
@@ -47,8 +47,26 @@ const { game, newGame, showScore } = require("../game");
      test("should set the player moves to zero", () => {
         expect(game.playerMoves.length).toBe(0);
      });
-     test("should set current game array to zero", () => {
-        expect(game.currentGame.length).toBe(0);
+     test("should be one move in the computer's game array", () => {
+         expect(game.currentGame.length).toBe(1);
+     });
+ });
+
+ describe("gameplay works correctly", () => {
+     beforeEach(() => {
+         game.score = 0;
+         game.currentGame = [];
+         game.playerMoves = [];
+         addTurn();
+     });
+     afterEach(() => {
+         game.score = 0;
+         game.currentGame = [];
+         game.playerMoves = [];
+     });
+     test("addTurn adds a new turn to the game", () => {
+         addTurn();
+         expect(game.currentGame.length).toBe(2);
      });
  });
 
