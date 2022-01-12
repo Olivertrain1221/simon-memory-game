@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */    
 
-const { game } = require("../game");
+const { game, newGame, showScore } = require("../game");
  
  beforeAll(() => {
      let fs = require("fs");
@@ -18,6 +18,37 @@ const { game } = require("../game");
      });
      test("currentGame key exists", () => {
          expect("currentGame" in game).toBe(true);
+     });
+     test("playerMoves key exists", () => {
+         expect("playerMoves" in game).toBe(true);
+     });
+     test("choices key exists", () => {
+         expect("choices" in game).toBe(true);
+     });
+     test("choice contains the correct IDS", () => {
+         expect(game.choices).toEqual(["button1", "button2", "button3", "button4"]);
+     })
+ });
+
+ describe("newGame works correctly", () => {
+     beforeAll(() => {
+         game.score = 42;
+         game.playerMoves = ["button1", "button2"];
+         game.currentGame = ["button1", "button2"];
+         document.getElementById("score").innerText = "42";
+         newGame();
+     });
+     test("should set game score to zero", () => {
+        expect(game.score).toEqual(0);
+     });
+     test("should display 0 for the element with the id of score", () => {
+         expect(document.getElementById("score").innerText).toEqual(0);
+     });
+     test("should set the player moves to zero", () => {
+        expect(game.playerMoves.length).toBe(0);
+     });
+     test("should set current game array to zero", () => {
+        expect(game.currentGame.length).toBe(0);
      });
  });
 
