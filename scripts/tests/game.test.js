@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
- const { game, newGame, showScore, addTurn, lightsOn } = require("../game");
+ const { game, newGame, showScore, addTurn, lightsOn, showTurns } = require("../game");
 
  beforeAll(() => {
      let fs = require("fs");
@@ -49,5 +49,15 @@
      });
      test("should add one move to the computer's game array", () => {
          expect(game.currentGame.length).toBe(1);
+     });
+     test("check if the turnInProgress key is set to true after", () => {
+         showTurns();
+         expect(game.turnInProgress).toBe(true);
+     });
+     test("clicking during computer sequence should fail", () => {
+        showTurns();
+        game.lastButton = "";
+        document.getElementById("button2") .click();
+        expect(game.lastButton).toEqual("");
      });
  });
